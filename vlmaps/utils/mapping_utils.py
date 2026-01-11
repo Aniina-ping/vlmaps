@@ -177,7 +177,10 @@ def depth2pc_ai2thor(depth, clipping_dist=0.1, fov=90):
     pc = pc * z
     mask = pc[2, :] > 0.1
     mask2 = pc[2, :] < 10
+    # y > -0.5
+    mask3 = pc[1, :] > 0
     mask = np.logical_and(mask, mask2)
+    mask = np.logical_and(mask, mask3)
     # pc = pc[:, mask]
     return pc, mask
 
@@ -247,6 +250,11 @@ def depth2pc(depth, fov=90, intr_mat=None, min_depth=0.1, max_depth=10):
     mask = pc[2, :] > min_depth
 
     mask = np.logical_and(mask, pc[2, :] < max_depth)
+
+    # y > -0.5
+    mask3 = pc[1, :] > 0
+    mask = np.logical_and(mask, mask3)
+
     # pc = pc[:, mask]
     return pc, mask
 
@@ -608,7 +616,15 @@ def project_points(cam_mat, p):
 
 def get_sim_cam_mat_with_fov(h, w, fov):
     cam_mat = np.eye(3)
-    cam_mat[0, 0] = cam_mat[1, 1] = w / (2.0 * np.tan(np.deg2rad(fov / 2)))
+    f  = h / (2.0 * np.tan(np.deg2rad(fov / 2)))
+    cam_mat[0, 0] = cam_mat[1, 1] = f
+    ## Or
+    # cam_mat = np.eye(3, dtype=np.float32)
+    # f = 0.5 * h / np.tan(np.deg2rad(fov) * 0.5)
+    # cam_mat[0, 0] = f
+    # cam_mat[1, 1] = f
+    
+    # cam_mat[0, 0] = cam_mat[1, 1] = w / (2.0 * np.tan(np.deg2rad(fov / 2)))
     cam_mat[0, 2] = w / 2.0
     cam_mat[1, 2] = h / 2.0
     return cam_mat

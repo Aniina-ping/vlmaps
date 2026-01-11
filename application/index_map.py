@@ -14,6 +14,12 @@ from vlmaps.utils.visualize_utils import (
     get_heatmap_from_mask_2d,
     get_heatmap_from_mask_3d,
 )
+import os
+import importlib
+from vlmaps.utils import matterport3d_categories
+importlib.reload(matterport3d_categories)
+mp3dcat = matterport3d_categories.mp3dcat
+
 
 
 @hydra.main(
@@ -24,9 +30,13 @@ from vlmaps.utils.visualize_utils import (
 def main(config: DictConfig) -> None:
     data_dir = Path(config.data_paths.vlmaps_data_dir)
     data_dirs = sorted([x for x in data_dir.iterdir() if x.is_dir()])
-    print(data_dirs[config.scene_id])
-    vlmap = VLMap(config.map_config, data_dir=data_dirs[config.scene_id])
-    vlmap.load_map(data_dirs[config.scene_id])
+    # print(data_dirs[config.scene_id])
+    # vlmap = VLMap(config.map_config, data_dir=data_dirs[config.scene_id])
+    # vlmap.load_map(data_dirs[config.scene_id])
+    scene_dir = os.path.join(data_dir, config.scene_name)
+    print(scene_dir)
+    vlmap = VLMap(config.map_config, data_dir=scene_dir)
+    vlmap.load_map(scene_dir)
     visualize_rgb_map_3d(vlmap.grid_pos, vlmap.grid_rgb)
     cat = input("What is your interested category in this scene?")
     # cat = "chair"

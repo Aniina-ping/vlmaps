@@ -24,6 +24,7 @@ from vlmaps.utils.mapping_utils import (
     base_pos2grid_id_3d,
     project_point,
     get_sim_cam_mat,
+    depth2pc_ai2thor,
 )
 from vlmaps.lseg.modules.models.lseg_net import LSegEncNet
 
@@ -297,6 +298,7 @@ class VLMapBuilderCam:
         min_depth: float = 0.1,
         max_depth: float = 10,
     ) -> np.ndarray:
+        # pc, mask = depth2pc_ai2thor(depth, fov=90)  # (3, N)
         pc, mask = depth2pc(depth, intr_mat=calib_mat, min_depth=min_depth, max_depth=max_depth)  # (3, N)
         shuffle_mask = np.arange(pc.shape[1])
         np.random.shuffle(shuffle_mask)

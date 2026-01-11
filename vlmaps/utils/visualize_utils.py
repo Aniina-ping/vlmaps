@@ -11,6 +11,11 @@ def visualize_rgb_map_3d(pc: np.ndarray, rgb: np.ndarray):
     pcd = o3d.geometry.PointCloud()
     pcd.points = o3d.utility.Vector3dVector(pc)
     pcd.colors = o3d.utility.Vector3dVector(grid_rgb)
+    flip_transform = np.array([[1, 0,  0, 0],
+                           [0,-1,  0, 0],
+                           [0, 0, -1, 0],
+                           [0, 0,  0, 1]], dtype=np.float32)
+    pcd.transform(flip_transform)
     o3d.visualization.draw_geometries([pcd])
 
 

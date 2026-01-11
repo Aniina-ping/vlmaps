@@ -1,8 +1,8 @@
 gs: 1000
-cs: 0.05
-camera_height: 1.5
+cs: 0.01
+camera_height: 0
 map_type: "vlmaps_lseg_3d" # "lseg", "gt", "clip", "clip_gradcam", "vlmaps_lseg_3d"
-forward_dist: 0.1 # 0.05
+forward_dist: 0.25 # 0.05
 turn_angle: 5 #1
 sim_setting:
   default_agent: 0
@@ -14,8 +14,8 @@ sim_setting:
   move_forward: ${params.forward_dist}
   turn_left: ${params.turn_angle}
   turn_right: ${params.turn_angle}
-  width: 640 # 1920
-  height: 480 # 1080
+  width: 1024 # 1920,640,800
+  height: 768 # 1080,480,600
   enable_physics: False
   seed: 1
   lidar_fov: 360
