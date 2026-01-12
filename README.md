@@ -3,35 +3,14 @@
 
 # VLMaps
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1xsH9Gr_O36sBZaoPNq1SmqgOOF12spV0?usp=sharing)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Static Badge](https://img.shields.io/badge/Project-Page-a)](https://vlmaps.github.io/)
-[![Static Badge](https://img.shields.io/badge/Google_AI_Blog-Post-red)](https://blog.research.google/2023/03/visual-language-maps-for-robot.html?m=1)
-
-
-[<b>Visual Language Maps for Robot Navigation</b>](https://arxiv.org/pdf/2210.05714.pdf)
-
-[Chenguang Huang](http://www2.informatik.uni-freiburg.de/~huang/), [Oier Mees](https://www.oiermees.com/), [Andy Zeng](https://andyzeng.github.io/), [Wolfram Burgard](http://www2.informatik.uni-freiburg.de/~burgard)
-
-We present **VLMAPs** (**V**isual **L**anguage **Maps**),  a spatial map representation in which pretrained visuallanguage model features are fused into a 3D reconstruction of the physical
-world. Spatially anchoring visual language features enables *natural language indexing in the map*, which can be used to, e.g., localize landmarks
-or spatial references with respect to landmarks – enabling zero-shot spatial
-goal navigation without additional data collection or model finetuning.
-
-![](https://vlmaps.github.io/static/images/vlmaps_blog_post.mp4)
-![](media/banner.png)
-# Approach
 ![](https://vlmaps.github.io/static/images/pipeline.png)
 
 # Quick Start
-
-Try VLMaps creation and landmark indexing in [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1xsH9Gr_O36sBZaoPNq1SmqgOOF12spV0?usp=sharing)
-
 ## Dependencies installation
 
 To begin on your own machine, clone this repository locally
 ```bash
-git clone https://github.com/vlmaps/vlmaps.git
+git clone https://github.com/Aniina-ping/vlmaps.git
 ```
 Install requirements:
 ```bash
@@ -42,35 +21,24 @@ $ cd vlmaps
 $ bash install.bash
 ```
 
-## Run Demo
-```bash
-git checkout demo
-```
+⚠️ Installation Note (pycolmap / hloc Issue)
 
-Start the jupyter notebook
+When running `bash install.bash` for installation, you may encounter the following error:
+```txt
+ERROR: Could not find a version that satisfies the requirement pycolmap>=3.13.0 (from hloc)
+```
+Solution:
 ```bash
-$ jupyter notebook demo.ipynb
+pip install pycolmap==3.12.5
+cd Hierarchical-Localization
+git checkout v1.4 # Switch to v1.4 branch:
+pip install -e .
 ```
 
 # Advanced Usage
 Use the `master` branch
 ```bash
 git checkout master
-```
-
-## Generate Dataset
-To build VLMaps for simulated environments, we manually collected 10 sequences of RGB-D videos among 10 scenes in Habitat simulator with Matterport3D dataset. We provide script and pose meta data to generate the RGB-D videos. Please follow the next few steps to generate the dataset.
-
-### Download Matterpot3D dataset
-Please check [Dataset Download](https://niessner.github.io/Matterport/), sign the [Terms of Use](http://kaldir.vc.in.tum.de/matterport/MP_TOS.pdf), and send to the responsible person to request the Matterport3D mesh for the use in Habitat simulator. The return email will attach a python script to download the data. Copy and paste the script to a file `~/download_mp.py`. Run the following to download the data:
-
-```bash
-cd ~
-# download the data at the current directory
-python2 download_mp.py -o . --task habitat
-# unzip the data
-unzip v1/tasks/mp3d_habitat.zip
-# the data_dir is mp3d_habitat/mp3d
 ```
 
 ### Generate Dataset
@@ -118,16 +86,6 @@ unzip v1/tasks/mp3d_habitat.zip
     # the generated dataset will be in the same
     python generate_dataset.py
     ```
-
-### Collect your own data in Habitat-Sim
-
-Run the following code to collect your own data (for example for scene `gTV8FGcVJC9`):
-
-```python
-python dataset/collect_custom_dataset.py scene_names=["gTV8FGcVJC9"]
-```
-
-The generated data folder will be `<scene_name>_<id>` under `vlmaps_data_dir` in `config/data_paths/default.yaml` (If you already set the `data_paths` to `default`). The `<scene_name>` is `gTV8FGcVJC9` for the above command, and the `<id>` depends on the existing data folders for this scene. If `gTV8FGcVJC9_1` exists, then the new folder name will be `gTV8FGcVJC9_2`.
 
 ## Create a VLMap with the Generated Dataset
 * Change the value for `defaults/data_paths` in `config/map_creation_cfg.yaml` to `default`.
@@ -277,14 +235,6 @@ If you find the dataset or code useful, please cite:
 } 
 ```
 
-## TODO
-- [ ] **Refactor Other Mappings**
-  - [ ] gradcam_map.py
-  - [ ] clip_map.py
-  - [ ] gtmap.py
-- [ ] **Improve Navigation Stack (Looking for Contributions from the Community)**
-  - [ ] the code currently uses `pyvisgraph` to build covisibility graph based on an obstacle map for navigation, which often leads to getting stuck or collisions when the robot navigates at the corner of objects (like the corner of the table). The current solution is to dilate the obstacle map before building the covisibility graph, but this will leads to closing of narrow passages (half-open door becomes closed door). I am happy to discuss solutions to this.
-  - [ ] navigation stack on real robot with LiDAR, RGBD camera and other sensors.
 
 ## License
 
