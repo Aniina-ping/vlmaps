@@ -36,9 +36,9 @@ pip install -e .
 ```
 
 # Advanced Usage
-Use the `master` branch
+Use the `ai2thor_ver` branch
 ```bash
-git checkout master
+git checkout ai2thor_ver
 ```
 
 ### Generate Dataset
